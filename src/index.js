@@ -20,20 +20,29 @@ function onInputChange(e) {
   counriesApiService.query = e.target.value.trim();
 
   if (counriesApiService.query !== '') {
-    counriesApiService.fetchCountries().then(response => {
-      if (response.length > 10) {
-        Notiflix.Notify.info(
-          'Too many matches found. Please enter a more specific name.'
-        );
-      } else if (response.length < 10 && response.length >= 2) {
-        countryListEl.insertAdjacentHTML(
-          'beforeend',
-          listOfCountriesMarkup(response)
-        );
-      } else {
-        countryInfoEl.insertAdjacentHTML('beforeend', countryMarkup(response));
-      }
-    });
+    counriesApiService
+      .fetchCountries()
+      .then(response => {
+        if (response.length > 10) {
+          Notiflix.Notify.info(
+            'Too many matches found. Please enter a more specific name.'
+          );
+        } else if (response.length < 10 && response.length >= 2) {
+          countryListEl.insertAdjacentHTML(
+            'beforeend',
+            listOfCountriesMarkup(response)
+          );
+        } else {
+          countryInfoEl.insertAdjacentHTML(
+            'beforeend',
+            countryMarkup(response)
+          );
+        }
+      })
+      .catch(() => {
+        Notiflix.Notify.failure('Oops, there is no country with that name');
+        return [];
+      });
   }
 }
 
